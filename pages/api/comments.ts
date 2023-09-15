@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!postId || typeof postId !== 'string') {
       throw new Error('Invalid ID');
     }
-    // Se crea el comentario
+
     const comment = await prisma.comment.create({
       data: {
         body,
@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
 
-    // Se notifica el comentario
+    // NOTIFICATION PART START
     try {
       const post = await prisma.post.findUnique({
         where: {
@@ -54,6 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     catch (error) {
       console.log(error);
     }
+    // NOTIFICATION PART END
 
     return res.status(200).json(comment);
   } catch (error) {
